@@ -10,7 +10,7 @@ import "forge-std/console.sol";
 contract WhitelistUmbrellaTest is Test {
     WhitelistUmbrella public whitelistUmbrella;
     address public owner = address(0x1);
-    address public dAppSigner = vm.addr(0x2); // Utilisation de l'adresse correspondante
+    address public dAppSigner = vm.addr(0x2);
     address public otherAccount = address(0x3);
     address public anotherAccount = address(0x4);
     uint256 private constant dAppPrivateKey = 0x2;
@@ -40,7 +40,7 @@ contract WhitelistUmbrellaTest is Test {
         uint256 nonce = 0;
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
+        // Generate the message the same way as in the Next.js API
         bytes32 messageToAdd = keccak256(
             abi.encodePacked(
                 otherAccount,
@@ -51,13 +51,13 @@ contract WhitelistUmbrellaTest is Test {
         );
         bytes32 prefixedMessageToAdd = prefixed(messageToAdd);
 
-        // Utiliser la clé privée pour signer le message avec ethers.js
+        // Use the private key to sign the message with ethers.js
         bytes memory signatureToAdd = signMessage(
             dAppPrivateKey,
             prefixedMessageToAdd
         );
 
-        // Simuler l'appel de la fonction addAddressToWhitelist par otherAccount
+        // Simulate the call to the addAddressToWhitelist function by otherAccount
         vm.prank(otherAccount);
         whitelistUmbrella.addAddressToWhitelist(
             nonce,
@@ -65,7 +65,7 @@ contract WhitelistUmbrellaTest is Test {
             randomValue
         );
 
-        // Vérifier que l'adresse est bien ajoutée à la whitelist
+        // Check that the address was added to the whitelist
         assertTrue(
             whitelistUmbrella.whitelistedAddresses(otherAccount),
             "Address should be whitelisted"
@@ -84,7 +84,6 @@ contract WhitelistUmbrellaTest is Test {
         uint256 nonce = 0;
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
         bytes32 messageToPause = keccak256(
             abi.encodePacked(
                 otherAccount,
@@ -95,13 +94,11 @@ contract WhitelistUmbrellaTest is Test {
         );
         bytes32 prefixedMessageToPause = prefixed(messageToPause);
 
-        // Utiliser la clé privée pour signer le message avec ethers.js
         bytes memory signatureToPause = signMessage(
             dAppPrivateKey,
             prefixedMessageToPause
         );
 
-        // Simuler l'appel de la fonction addAddressToWhitelist par otherAccount
         vm.prank(otherAccount);
         vm.expectRevert("Contract is paused");
         whitelistUmbrella.addAddressToWhitelist(
@@ -145,14 +142,14 @@ contract WhitelistUmbrellaTest is Test {
             );
         }
 
-        // Vérifier que la whitelist est pleine
+        // Check that the whitelist is full
         assertEq(
             whitelistUmbrella.numAddressesWhitelisted(),
             5,
             "Whitelist should be full"
         );
 
-        // Essayer d'ajouter une adresse supplémentaire
+        // Try to add another address
         address extraAddress = address(uint160(0x106));
         nonce = 0;
         randomValue = "random";
@@ -186,7 +183,6 @@ contract WhitelistUmbrellaTest is Test {
         uint256 nonce = 0;
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
         bytes32 messageAlreadyWhitelisted = keccak256(
             abi.encodePacked(
                 otherAccount,
@@ -203,7 +199,6 @@ contract WhitelistUmbrellaTest is Test {
             prefixedMessageAlreadyWhitelisted
         );
 
-        // Simuler l'appel de la fonction addAddressToWhitelist par otherAccount
         vm.prank(otherAccount);
         whitelistUmbrella.addAddressToWhitelist(
             nonce,
@@ -211,16 +206,14 @@ contract WhitelistUmbrellaTest is Test {
             randomValue
         );
 
-        // Vérifier que l'adresse est bien ajoutée à la whitelist
         assertTrue(
             whitelistUmbrella.whitelistedAddresses(otherAccount),
             "Address should be whitelisted"
         );
 
-        // Incrémenter le nonce pour la prochaine tentative d'ajout
+        // Increment the nonce
         nonce++;
 
-        // Générer un nouveau message avec le nonce incrémenté
         messageAlreadyWhitelisted = keccak256(
             abi.encodePacked(
                 otherAccount,
@@ -235,7 +228,7 @@ contract WhitelistUmbrellaTest is Test {
             prefixedMessageAlreadyWhitelisted
         );
 
-        // Essayer d'ajouter la même adresse à nouveau avec le nonce incrémenté
+        // Try to add the address again
         vm.prank(otherAccount);
         vm.expectRevert("Address already whitelisted");
         whitelistUmbrella.addAddressToWhitelist(
@@ -252,11 +245,9 @@ contract WhitelistUmbrellaTest is Test {
             "Owner should be the deployer"
         );
 
-        // Changer le propriétaire
         vm.prank(owner);
         whitelistUmbrella.transferOwnership(otherAccount);
 
-        // Vérifier que le propriétaire a changé
         assertEq(
             whitelistUmbrella.owner(),
             otherAccount,
@@ -275,7 +266,6 @@ contract WhitelistUmbrellaTest is Test {
         uint256 privateKey,
         bytes32 message
     ) internal pure returns (bytes memory) {
-        // Utiliser la bibliothèque ethers pour signer le message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, message);
         return abi.encodePacked(r, s, v);
     }

@@ -10,7 +10,7 @@ import "forge-std/console.sol";
 contract HoroscopeNFTv3Test is Test {
     HoroscopeNFTv3 public horoscopeNFT;
     address public owner = address(0x1);
-    address public dAppSigner = vm.addr(0x2); // Utilisation de l'adresse correspondante
+    address public dAppSigner = vm.addr(0x2);
     address public recipient = address(0x3);
     address public anotherRecipient = address(0x4);
     uint256 private constant dAppPrivateKey = 0x2;
@@ -37,7 +37,7 @@ contract HoroscopeNFTv3Test is Test {
         string memory svgCore = "<svg></svg>";
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
+        // Generate the message the same way as in the Next.js API
         bytes32 message = keccak256(
             abi.encodePacked(
                 recipient,
@@ -48,10 +48,10 @@ contract HoroscopeNFTv3Test is Test {
         );
         bytes32 prefixedMessage = prefixed(message);
 
-        // Utiliser la clé privée pour signer le message avec ethers.js
+        // Use the private key to sign the message with ethers.js
         bytes memory signature = signMessage(dAppPrivateKey, prefixedMessage);
 
-        // Simuler l'appel de la fonction mintNFT par recipient
+        // Simulate the call to the mintNFT function by recipient
         vm.prank(recipient);
         uint256 tokenId = horoscopeNFT.mintNFT(
             recipient,
@@ -62,7 +62,7 @@ contract HoroscopeNFTv3Test is Test {
             randomValue
         );
 
-        // Vérifier que le NFT est minté
+        // Check that the NFT was minted to the recipient
         assertEq(
             horoscopeNFT.ownerOf(tokenId),
             recipient,
@@ -75,12 +75,11 @@ contract HoroscopeNFTv3Test is Test {
         vm.prank(owner);
         horoscopeNFT.setDAppSigner(dAppSigner);
 
-        uint256 nonce = 1; // Utiliser un nonce invalide
+        uint256 nonce = 1; // Use a different nonce
         string memory zodiacSign = "Aquarius";
         string memory svgCore = "<svg></svg>";
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
         bytes32 message = keccak256(
             abi.encodePacked(
                 recipient,
@@ -91,10 +90,8 @@ contract HoroscopeNFTv3Test is Test {
         );
         bytes32 prefixedMessage = prefixed(message);
 
-        // Utiliser la clé privée pour signer le message avec ethers.js
         bytes memory signature = signMessage(dAppPrivateKey, prefixedMessage);
 
-        // Simuler l'appel de la fonction mintNFT par recipient
         vm.prank(recipient);
         vm.expectRevert("Invalid nonce");
         horoscopeNFT.mintNFT(
@@ -116,7 +113,6 @@ contract HoroscopeNFTv3Test is Test {
         string memory svgCore = "<svg></svg>";
         string memory randomValue = "random";
 
-        // Générer le message de la même manière que dans l'API Next.js
         bytes32 message = keccak256(
             abi.encodePacked(
                 recipient,
@@ -127,10 +123,8 @@ contract HoroscopeNFTv3Test is Test {
         );
         bytes32 prefixedMessage = prefixed(message);
 
-        // Utiliser une clé privée différente pour signer le message
         bytes memory signature = signMessage(0x3, prefixedMessage);
 
-        // Simuler l'appel de la fonction mintNFT par recipient
         vm.prank(recipient);
         vm.expectRevert("Invalid signature");
         horoscopeNFT.mintNFT(
@@ -146,11 +140,11 @@ contract HoroscopeNFTv3Test is Test {
     function testOwner() public {
         assertEq(horoscopeNFT.owner(), owner, "Owner should be the deployer");
 
-        // Changer le propriétaire
+        // Change the owner
         vm.prank(owner);
         horoscopeNFT.transferOwnership(recipient);
 
-        // Vérifier que le propriétaire a changé
+        // Check that the owner was changed
         assertEq(
             horoscopeNFT.owner(),
             recipient,
@@ -169,7 +163,6 @@ contract HoroscopeNFTv3Test is Test {
         uint256 privateKey,
         bytes32 message
     ) internal pure returns (bytes memory) {
-        // Utiliser la bibliothèque ethers pour signer le message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, message);
         return abi.encodePacked(r, s, v);
     }
