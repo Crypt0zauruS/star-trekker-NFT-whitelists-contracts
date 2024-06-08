@@ -62,6 +62,10 @@ These contracts can only be used with our dApp to ensure maximum security. Entri
 
 The signature generation procedure serves to certify that the user has earned their whitelist spot either by registering on my UmbrellaCorp Academy portfolio (20 spots available) or by successfully completing the Star Trekker quiz on my Star Trekker Quiz dApp.
 
+## 🧑‍🎓 HoroscopeNFTv3 Contract
+
+The HoroscopeNFTv3 contract allows users to mint an NFT displaying their zodiac sign in SVG format. This can only be done through my blog, UmbrellaCorp Academy.
+
 ## 🧪 Tests Conducted
 
 We have rigorously tested each feature of our contracts to ensure they function correctly. Here are the tests performed:
@@ -85,6 +89,14 @@ We have rigorously tested each feature of our contracts to ensure they function 
 4. **testAddMultipleAddressesUntilLimit**: Verifies that multiple addresses can be added until the limit is reached.
 5. **testCannotAddAddressAlreadyWhitelisted**: Verifies that an address cannot be added twice.
 6. **testOwner**: Verifies that the initial owner is correctly set and can be changed.
+
+### Tests for HoroscopeNFTv3
+
+1. **testDeployment**: Verifies that the contract is deployed with the correct `dAppSigner`.
+2. **testMintNFT**: Verifies that an NFT can be minted with the correct conditions.
+3. **testCannotMintNFTWithInvalidNonce**: Verifies that minting fails with an invalid nonce.
+4. **testCannotMintNFTWithInvalidSignature**: Verifies that minting fails with an invalid signature.
+5. **testOwner**: Verifies that the initial owner is correctly set and can be changed.
 
 ## 🌟 Acknowledgements
 
